@@ -26,6 +26,11 @@
     "name": "Andreas Rosseland Kvåle",
     "email": "arkvaale@gmail.com"
   },
+  "source": "https://github.com/kvile0/no.arkvaale.innova",
+  "bugs": {
+    "url": "https://github.com/kvile0/no.arkvaale.innova/issues"
+  },
+  "support": "https://github.com/kvile0/no.arkvaale.innova/issues",
   "contributing": {
     "donate": {
       "paypal": {

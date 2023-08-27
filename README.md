@@ -2,6 +2,8 @@
 
 App for Innova WiFi connected fancoils
 
+Homey and Fancoil needs to be connected to the same network. App discovers Fancoil through MAC-address.
+
 Atleast know to work with the following models:
 - EFA649
 - EFB649
