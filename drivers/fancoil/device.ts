@@ -1,7 +1,10 @@
+// noinspection HttpUrlsUsage
+
 import Homey, { DiscoveryResult, DiscoveryResultMAC } from 'homey';
 import axios from 'axios';
 import { CommandSent, StatusResponse } from '../../interfaces/innova-api.interface';
 
+// noinspection HttpUrlsUsage
 class FanCoilDevice extends Homey.Device {
   /**
    * onInit is called when the device is initialized.

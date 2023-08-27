@@ -1,6 +1,6 @@
 # Innova Fancoil
 
-App for Innova WiFi connected fancoils
+App for Innova Wi-Fi connected fancoils
 
 Homey and Fancoil needs to be connected to the same network. App discovers Fancoil through MAC-address.
 
