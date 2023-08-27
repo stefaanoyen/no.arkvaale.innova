@@ -1,0 +1,47 @@
+{
+  "type": "enum",
+  "title": {
+    "no": "Vifte hastighet",
+    "en": "Fan speed"
+  },
+  "getable": true,
+  "setable": true,
+  "values": [
+    {
+      "id": "auto",
+      "title": {
+        "en": "Automatic",
+        "nl": "Automatisch",
+        "de": "Automatisch",
+        "fr": "Automatique",
+        "it": "Automatica",
+        "sv": "Automatiskt",
+        "no": "Automatisk",
+        "es": "Automático",
+        "da": "Automatisk"
+      }
+    },
+    {
+      "id": "min",
+      "title": {
+        "en": "Minimum",
+        "no": "Minimum"
+      }
+    },
+    {
+      "id": "max",
+      "title": {
+        "en": "Maximum",
+        "no": "Maksimum"
+      }
+    },
+    {
+      "id": "night",
+      "title": {
+        "en": "Night",
+        "no": "Natt"
+      }
+    }
+  ],
+  "uiComponent": "picker"
+}

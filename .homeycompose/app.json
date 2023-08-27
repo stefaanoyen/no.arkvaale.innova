@@ -1,0 +1,36 @@
+{
+  "id": "no.arkvaale.innova",
+  "version": "1.0.1",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "brandColor": "#5fc5df",
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Innova Fancoil"
+  },
+  "description": {
+    "en": "App for Innova WiFi connected fancoils"
+  },
+  "category": [
+    "climate"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Andreas Rosseland Kvåle",
+    "email": "arkvaale@gmail.com"
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "kvile0"
+      }
+    }
+  }
+}
