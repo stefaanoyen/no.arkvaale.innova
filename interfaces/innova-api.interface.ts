@@ -14,9 +14,9 @@ export interface result {
   ps?: number; // Power: 0=off, 1=on
   cm?: number; // Scheduling Mode: 0=off, 1=o
   ta: number; // Current Temperature (x10)
-  tw?: number; // Water Temperature (x10)
+  tw: number; // Water Temperature (x10)
+  a: string[]; // Error messages
   kl?: number;
-  a?: string[];
   ns?: number;
   lastworkingModeSet?: number;
   cloudStatus?: number;

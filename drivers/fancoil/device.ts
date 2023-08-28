@@ -179,10 +179,27 @@ class FancoilDevice extends Homey.Device {
 
   setCapabilityValues(result: result) {
     this.setCapabilityValue('onoff', result.ps === 1).catch(this.error);
-    this.setCapabilityValue('target_temperature', result.sp / 10).catch(this.error);
-    this.setCapabilityValue('measure_temperature', result.ta / 10).catch(this.error);
-    this.setCapabilityValue('fancoil_mode', this.getFancoilMode(result.wm)).catch(this.error);
-    this.setCapabilityValue('fan_speed', this.getFanSpeed(result.fn)).catch(this.error);
+    const targetTemperature = result.sp / 10;
+    this.setCapabilityValue('target_temperature', targetTemperature).catch(this.error);
+    this.setCapabilityValue('measure_temperature.target', targetTemperature).catch(this.error);
+    const currentTemperature = result.ta / 10;
+    this.setCapabilityValue('measure_temperature', currentTemperature).catch(this.error);
+    this.setCapabilityValue('measure_temperature.current', currentTemperature).catch(this.error);
+    this.setCapabilityValue('measure_temperature.water', result.tw / 10).catch(this.error);
+    const fancoilMode = this.getFancoilMode(result.wm);
+    this.setCapabilityValue('fancoil_mode', fancoilMode).catch(this.error);
+    this.setCapabilityValue('fancoil_mode_state', fancoilMode).catch(this.error);
+    const fanSpeed = this.getFanSpeed(result.fn);
+    this.setCapabilityValue('fan_speed', fanSpeed).catch(this.error);
+    this.setCapabilityValue('fan_speed_state', fanSpeed).catch(this.error);
+    this.setCapabilityValue('alarm_generic', result.a.length > 0).catch(this.error);
+    if (result.a.length > 0) {
+      this.setCapabilityOptions('alarm_generic', {
+        insightsTitleTrue: {
+          en: result.a[0],
+        },
+      }).catch(this.error);
+    }
   }
 
   async sendCommand(command: string, body = {}) {
@@ -219,6 +236,8 @@ class FancoilDevice extends Homey.Device {
       wm: 3,
       fn: 1,
       ta: 210,
+      tw: 280,
+      a: ['H2NI'],
     };
   }
 }

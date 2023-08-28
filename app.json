@@ -47,10 +47,16 @@
       "class": "thermostat",
       "capabilities": [
         "target_temperature",
+        "measure_temperature.target",
         "measure_temperature",
-        "fancoil_mode",
+        "measure_temperature.current",
         "onoff",
-        "fan_speed"
+        "measure_temperature.water",
+        "fancoil_mode",
+        "fancoil_mode_state",
+        "fan_speed",
+        "fan_speed_state",
+        "alarm_generic"
       ],
       "capabilitiesOptions": {
         "target_temperature": {
@@ -61,8 +67,45 @@
             "no": "°C"
           }
         },
+        "measure_temperature.target": {
+          "title": {
+            "en": "Set temperature",
+            "no": "Satt temperatur"
+          },
+          "decimals": 1,
+          "units": {
+            "en": "°C",
+            "no": "°C"
+          }
+        },
         "measure_temperature": {
-          "decimals": 1
+          "decimals": 1,
+          "units": {
+            "en": "°C",
+            "no": "°C"
+          }
+        },
+        "measure_temperature.current": {
+          "title": {
+            "en": "Current temperature",
+            "no": "Nåværende temperatur"
+          },
+          "decimals": 1,
+          "units": {
+            "en": "°C",
+            "no": "°C"
+          }
+        },
+        "measure_temperature.water": {
+          "title": {
+            "en": "Water temperature",
+            "no": "Vann temperatur"
+          },
+          "decimals": 1,
+          "units": {
+            "en": "°C",
+            "no": "°C"
+          }
         }
       },
       "platforms": [
@@ -144,6 +187,53 @@
       ],
       "uiComponent": "picker"
     },
+    "fan_speed_state": {
+      "type": "enum",
+      "title": {
+        "no": "Vifte hastighet",
+        "en": "Fan speed"
+      },
+      "getable": true,
+      "setable": false,
+      "values": [
+        {
+          "id": "auto",
+          "title": {
+            "en": "Automatic",
+            "nl": "Automatisch",
+            "de": "Automatisch",
+            "fr": "Automatique",
+            "it": "Automatica",
+            "sv": "Automatiskt",
+            "no": "Automatisk",
+            "es": "Automático",
+            "da": "Automatisk"
+          }
+        },
+        {
+          "id": "min",
+          "title": {
+            "en": "Minimum",
+            "no": "Minimum"
+          }
+        },
+        {
+          "id": "max",
+          "title": {
+            "en": "Maximum",
+            "no": "Maksimum"
+          }
+        },
+        {
+          "id": "night",
+          "title": {
+            "en": "Night",
+            "no": "Natt"
+          }
+        }
+      ],
+      "uiComponent": "sensor"
+    },
     "fancoil_mode": {
       "type": "enum",
       "title": {
@@ -201,6 +291,64 @@
       "getable": true,
       "setable": true,
       "uiComponent": "picker"
+    },
+    "fancoil_mode_state": {
+      "type": "enum",
+      "title": {
+        "en": "Thermostat mode",
+        "nl": "Thermostaat modus",
+        "de": "Thermostat-Modus",
+        "fr": "Mode thermostat",
+        "it": "Modalità termostato",
+        "sv": "Termostatläge",
+        "no": "Termostatmodus",
+        "es": "Modo del termostato",
+        "da": "Termostattilstand"
+      },
+      "desc": {
+        "en": "Mode of the thermostat",
+        "nl": "Modus van de thermostaat",
+        "de": "Modus des Thermostates",
+        "fr": "Mode du thermostat",
+        "it": "Modalità del termostato",
+        "sv": "Läge för termostaten",
+        "no": "Modus for termostaten",
+        "es": "Modo del termostato",
+        "da": "Tilstand for termostat"
+      },
+      "values": [
+        {
+          "id": "heat",
+          "title": {
+            "en": "Heat",
+            "nl": "Verhitten",
+            "de": "Heizen",
+            "fr": "Chauffer",
+            "it": "Calore",
+            "sv": "Värme",
+            "no": "Varme",
+            "es": "Calentar",
+            "da": "Opvarm"
+          }
+        },
+        {
+          "id": "cool",
+          "title": {
+            "en": "Cool",
+            "nl": "Koelen",
+            "de": "Kühlen",
+            "fr": "Refroidir",
+            "it": "Raffreddamento",
+            "sv": "Kyla",
+            "no": "Avkjøle",
+            "es": "Enfriar",
+            "da": "Køl ned"
+          }
+        }
+      ],
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
     }
   },
   "discovery": {

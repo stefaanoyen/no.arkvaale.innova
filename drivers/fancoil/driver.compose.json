@@ -5,10 +5,16 @@
   "class": "thermostat",
   "capabilities": [
     "target_temperature",
+    "measure_temperature.target",
     "measure_temperature",
-    "fancoil_mode",
+    "measure_temperature.current",
     "onoff",
-    "fan_speed"
+    "measure_temperature.water",
+    "fancoil_mode",
+    "fancoil_mode_state",
+    "fan_speed",
+    "fan_speed_state",
+    "alarm_generic"
   ],
   "capabilitiesOptions": {
     "target_temperature": {
@@ -19,8 +25,45 @@
         "no": "°C"
       }
     },
+    "measure_temperature.target": {
+      "title": {
+        "en": "Set temperature",
+        "no": "Satt temperatur"
+      },
+      "decimals": 1,
+      "units": {
+        "en": "°C",
+        "no": "°C"
+      }
+    },
     "measure_temperature": {
-      "decimals": 1
+      "decimals": 1,
+      "units": {
+        "en": "°C",
+        "no": "°C"
+      }
+    },
+    "measure_temperature.current": {
+      "title": {
+        "en": "Current temperature",
+        "no": "Nåværende temperatur"
+      },
+      "decimals": 1,
+      "units": {
+        "en": "°C",
+        "no": "°C"
+      }
+    },
+    "measure_temperature.water": {
+      "title": {
+        "en": "Water temperature",
+        "no": "Vann temperatur"
+      },
+      "decimals": 1,
+      "units": {
+        "en": "°C",
+        "no": "°C"
+      }
     }
   },
   "platforms": [
