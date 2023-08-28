@@ -45,7 +45,7 @@ class FancoilDevice extends Homey.Device {
           throw new Error(errorMessage);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         throw new Error(errorMessage);
       });
   }
@@ -59,7 +59,7 @@ class FancoilDevice extends Homey.Device {
           throw new Error(errorMessage);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         throw new Error(errorMessage);
       });
   }
@@ -73,7 +73,7 @@ class FancoilDevice extends Homey.Device {
           throw new Error(errorMessage);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         throw new Error(errorMessage);
       });
   }
@@ -87,7 +87,7 @@ class FancoilDevice extends Homey.Device {
           throw new Error(errorMessage);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         throw new Error(errorMessage);
       });
   }
@@ -211,6 +211,15 @@ class FancoilDevice extends Homey.Device {
       default:
         return 'auto';
     }
+  }
+
+  private getMockResult(): result {
+    return {
+      sp: 220,
+      wm: 3,
+      fn: 1,
+      ta: 210,
+    };
   }
 }
 

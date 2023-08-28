@@ -55,7 +55,11 @@
       "capabilitiesOptions": {
         "target_temperature": {
           "min": 16,
-          "max": 28
+          "max": 28,
+          "units": {
+            "en": "°C",
+            "no": "°C"
+          }
         },
         "measure_temperature": {
           "decimals": 1
