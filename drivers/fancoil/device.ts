@@ -2,15 +2,21 @@
 
 import Homey, { DiscoveryResult, DiscoveryResultMAC } from 'homey';
 import axios from 'axios';
-import { CommandSent, StatusResponse } from '../../interfaces/innova-api.interface';
+import { CommandSent, result, StatusResponse } from '../../interfaces/innova-api.interface';
 
-// noinspection HttpUrlsUsage
-class FanCoilDevice extends Homey.Device {
+class FancoilDevice extends Homey.Device {
+  refreshInterval: NodeJS.Timeout | undefined;
+
   /**
    * onInit is called when the device is initialized.
    */
   async onInit() {
-    this.log('MyDevice has been initialized');
+    this.log('FancoilDevice has been initialized');
+    await this.refreshStatus();
+    clearInterval(this.refreshInterval);
+    this.refreshInterval = setInterval(() => {
+      this.refreshStatus();
+    }, 300000);
 
     this.on('connected', (_address) => {
       this.setAvailable().catch(this.error);
@@ -90,7 +96,7 @@ class FanCoilDevice extends Homey.Device {
    * onAdded is called when the user adds the device, called just after pairing.
    */
   async onAdded() {
-    this.log('MyDevice has been added');
+    this.log('FanCoilDevice has been added');
   }
 
   /**
@@ -114,7 +120,7 @@ class FanCoilDevice extends Homey.Device {
     };
     changedKeys: string[];
   }): Promise<string | void> {
-    this.log('MyDevice settings where changed');
+    this.log('FancoilDevice settings where changed');
   }
 
   /**
@@ -123,14 +129,15 @@ class FanCoilDevice extends Homey.Device {
    * @param _name
    */
   async onRenamed(_name: string) {
-    this.log('MyDevice was renamed');
+    this.log('FancoilDevice was renamed');
   }
 
   /**
    * onDeleted is called when the user deleted the device.
    */
   async onDeleted() {
-    this.log('MyDevice has been deleted');
+    this.log('FancoilDevice has been deleted');
+    clearInterval(this.refreshInterval);
   }
 
   onDiscoveryResult(discoveryResult: DiscoveryResult) {
@@ -140,6 +147,19 @@ class FanCoilDevice extends Homey.Device {
 
   async onDiscoveryAvailable(_discoveryResult: DiscoveryResult) {
     // This method will be executed once when the device has been found (onDiscoveryResult returned true)
+    await this.refreshStatus();
+  }
+
+  onDiscoveryAddressChanged(discoveryResult: DiscoveryResultMAC) {
+    // Update your connection details here, reconnect when the device is offline
+    this.setSettings({
+      ip: discoveryResult.address,
+    }).catch(() => {
+      throw new Error('Update IP address failed!');
+    });
+  }
+
+  async refreshStatus() {
     const settings = this.getSettings();
     const uri = `http://${settings.ip}/api/v/1/status`;
     await axios
@@ -147,34 +167,22 @@ class FanCoilDevice extends Homey.Device {
       .then((res) => {
         if (res) {
           const statusResponse = res.data as StatusResponse;
-          this.setCapabilityValue('onoff', statusResponse.RESULT.ps === 1).catch(this.error);
-          this.setCapabilityValue('target_temperature', statusResponse.RESULT.sp / 10).catch(
-            this.error,
-          );
-          this.setCapabilityValue('measure_temperature', statusResponse.RESULT.ta / 10).catch(
-            this.error,
-          );
-          this.setCapabilityValue(
-            'fancoil_mode',
-            this.getFancoilMode(statusResponse.RESULT.wm),
-          ).catch(this.error);
-          this.setCapabilityValue('fan_speed', this.getFanSpeed(statusResponse.RESULT.fn)).catch(
-            this.error,
-          );
+          this.setCapabilityValues(statusResponse.RESULT);
         } else {
-          throw new Error('Fetch of current status failed!');
+          this.log('Fetch of current status failed!');
         }
       })
       .catch(() => {
-        throw new Error('Fetch of current status failed!');
+        this.log('Fetch of current status failed!');
       });
   }
 
-  onDiscoveryAddressChanged(discoveryResult: DiscoveryResultMAC) {
-    // Update your connection details here, reconnect when the device is offline
-    this.setSettings({
-      ip: discoveryResult.address,
-    });
+  setCapabilityValues(result: result) {
+    this.setCapabilityValue('onoff', result.ps === 1).catch(this.error);
+    this.setCapabilityValue('target_temperature', result.sp / 10).catch(this.error);
+    this.setCapabilityValue('measure_temperature', result.ta / 10).catch(this.error);
+    this.setCapabilityValue('fancoil_mode', this.getFancoilMode(result.wm)).catch(this.error);
+    this.setCapabilityValue('fan_speed', this.getFanSpeed(result.fn)).catch(this.error);
   }
 
   async sendCommand(command: string, body = {}) {
@@ -206,4 +214,4 @@ class FanCoilDevice extends Homey.Device {
   }
 }
 
-module.exports = FanCoilDevice;
+module.exports = FancoilDevice;

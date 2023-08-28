@@ -1,11 +1,11 @@
 import Homey from 'homey';
 
-class FanCoilDriver extends Homey.Driver {
+class FancoilDriver extends Homey.Driver {
   /**
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    this.log('MyDriver has been initialized');
+    this.log('FancoilDriver has been initialized');
   }
 
   /**
@@ -29,4 +29,4 @@ class FanCoilDriver extends Homey.Driver {
   }
 }
 
-module.exports = FanCoilDriver;
+module.exports = FancoilDriver;

@@ -28,13 +28,13 @@
   "discovery": "mac",
   "pair": [
     {
-      "id": "list_my_devices",
+      "id": "list_fancoil_devices",
       "template": "list_devices",
-      "navigation": { "next": "add_my_devices" },
+      "navigation": { "next": "add_fancoil_devices" },
       "options": { "singular": true }
     },
     {
-      "id": "add_my_devices",
+      "id": "add_fancoil_devices",
       "template": "add_devices"
     }
   ],
