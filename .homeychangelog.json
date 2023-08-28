@@ -10,5 +10,8 @@
   },
   "1.0.3": {
     "en": "Refresh status from fancoil every 5 minutes"
+  },
+  "1.0.4": {
+    "en": "Minor changes"
   }
 }
