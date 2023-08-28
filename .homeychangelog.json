@@ -7,5 +7,8 @@
   },
   "1.0.2": {
     "en": "Minor fixes"
+  },
+  "1.0.3": {
+    "en": "Refresh status from fancoil every 5 minutes"
   }
 }
