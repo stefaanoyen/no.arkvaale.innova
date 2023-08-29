@@ -3,6 +3,7 @@
 import Homey, { DiscoveryResult, DiscoveryResultMAC } from 'homey';
 import axios from 'axios';
 import { CommandSent, result, StatusResponse } from '../../interfaces/innova-api.interface';
+import PROCESS from 'process';
 
 class FancoilDevice extends Homey.Device {
   refreshInterval: NodeJS.Timeout | undefined;
@@ -28,6 +29,10 @@ class FancoilDevice extends Homey.Device {
 
     // Capabilities
     this.registerCapabilityListener('onoff', this.onCapabilityOnOff.bind(this));
+    this.registerCapabilityListener(
+      'onoff.scheduling',
+      this.onCapabilityOnOffScheduling.bind(this),
+    );
     this.registerCapabilityListener('fancoil_mode', this.onCapabilityFancoilMode.bind(this));
     this.registerCapabilityListener(
       'target_temperature',
@@ -50,6 +55,20 @@ class FancoilDevice extends Homey.Device {
       });
   }
 
+  async onCapabilityOnOffScheduling(value: boolean) {
+    const command = value ? 'set/calendar/on' : 'set/calendar/off';
+    const errorMessage = `${value ? 'Activating' : 'Deactivating'} scheduling failed!`;
+    await this.sendCommand(command)
+      .then((res) => {
+        if (!res) {
+          throw new Error(errorMessage);
+        }
+      })
+      .catch(() => {
+        throw new Error(errorMessage);
+      });
+  }
+
   async onCapabilityFancoilMode(mode: 'cool' | 'heat') {
     const command = mode === 'cool' ? 'set/mode/cooling' : 'set/mode/heating';
     const errorMessage = `Changing mode to ${mode} failed!`;
@@ -57,6 +76,8 @@ class FancoilDevice extends Homey.Device {
       .then((res) => {
         if (!res) {
           throw new Error(errorMessage);
+        } else {
+          this.setCapabilityValue('fancoil_mode_state', mode).catch(this.error);
         }
       })
       .catch(() => {
@@ -71,6 +92,8 @@ class FancoilDevice extends Homey.Device {
       .then((res) => {
         if (!res) {
           throw new Error(errorMessage);
+        } else {
+          this.setCapabilityValue('measure_temperature.target', temp).catch(this.error);
         }
       })
       .catch(() => {
@@ -85,6 +108,8 @@ class FancoilDevice extends Homey.Device {
       .then((res) => {
         if (!res) {
           throw new Error(errorMessage);
+        } else {
+          this.setCapabilityValue('fan_speed_state', fanSpeed).catch(this.error);
         }
       })
       .catch(() => {
@@ -160,6 +185,11 @@ class FancoilDevice extends Homey.Device {
   }
 
   async refreshStatus() {
+    this.log('Refreshing status');
+    if (PROCESS.env.DEBUG === '1') {
+      this.setCapabilityValues(this.getMockResult());
+      return;
+    }
     const settings = this.getSettings();
     const uri = `http://${settings.ip}/api/v/1/status`;
     await axios
@@ -179,6 +209,7 @@ class FancoilDevice extends Homey.Device {
 
   setCapabilityValues(result: result) {
     this.setCapabilityValue('onoff', result.ps === 1).catch(this.error);
+    this.setCapabilityValue('onoff.scheduling', result.cm === 1).catch(this.error);
     const targetTemperature = result.sp / 10;
     this.setCapabilityValue('target_temperature', targetTemperature).catch(this.error);
     this.setCapabilityValue('measure_temperature.target', targetTemperature).catch(this.error);
@@ -196,13 +227,16 @@ class FancoilDevice extends Homey.Device {
     if (result.a.length > 0) {
       this.setCapabilityOptions('alarm_generic', {
         insightsTitleTrue: {
-          en: result.a[0],
+          en: `Current error message${result.a.length > 1 ? 's' : ''}: ${result.a.join(', ')}`,
         },
       }).catch(this.error);
     }
   }
 
   async sendCommand(command: string, body = {}) {
+    if (PROCESS.env.DEBUG === '1') {
+      return true;
+    }
     const settings = this.getSettings();
     const uri = `http://${settings.ip}/api/v/1/${command}`;
     const res = await axios.post(uri, body);
@@ -237,7 +271,9 @@ class FancoilDevice extends Homey.Device {
       fn: 1,
       ta: 210,
       tw: 280,
-      a: ['H2NI'],
+      a: [],
+      ps: 1,
+      cm: 0,
     };
   }
 }

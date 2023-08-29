@@ -11,8 +11,8 @@ export interface result {
   sp: number; // Temperature Set point (x10)
   wm: number; // Working Mode: 3=heating. 5=cooling
   fn: number; // Fan Function: 1=auto, 2=night, 3=min, 4=ma
-  ps?: number; // Power: 0=off, 1=on
-  cm?: number; // Scheduling Mode: 0=off, 1=o
+  ps: number; // Power: 0=off, 1=on
+  cm: number; // Scheduling Mode: 0=off, 1=o
   ta: number; // Current Temperature (x10)
   tw: number; // Water Temperature (x10)
   a: string[]; // Error messages

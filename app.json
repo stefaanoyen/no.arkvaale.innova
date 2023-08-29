@@ -56,9 +56,30 @@
         "fancoil_mode_state",
         "fan_speed",
         "fan_speed_state",
-        "alarm_generic"
+        "alarm_generic",
+        "onoff.scheduling"
       ],
       "capabilitiesOptions": {
+        "onoff": {
+          "title": {
+            "en": "Power",
+            "no": "Power"
+          }
+        },
+        "onoff.scheduling": {
+          "title": {
+            "en": "Scheduling",
+            "no": "Planlegging"
+          },
+          "insightsTitleTrue": {
+            "en": "Scheduling activated",
+            "no": "Planlegging aktivert"
+          },
+          "insightsTitleFalse": {
+            "en": "Scheduling deactivated",
+            "no": "Planlegging deaktivert"
+          }
+        },
         "target_temperature": {
           "min": 16,
           "max": 28,
@@ -69,8 +90,8 @@
         },
         "measure_temperature.target": {
           "title": {
-            "en": "Set temperature",
-            "no": "Satt temperatur"
+            "en": "Target temperature",
+            "no": "Mål temperatur"
           },
           "decimals": 1,
           "units": {
@@ -148,6 +169,7 @@
       },
       "getable": true,
       "setable": true,
+      "insights": true,
       "values": [
         {
           "id": "auto",
@@ -195,6 +217,7 @@
       },
       "getable": true,
       "setable": false,
+      "insights": true,
       "values": [
         {
           "id": "auto",
@@ -232,7 +255,8 @@
           }
         }
       ],
-      "uiComponent": "sensor"
+      "uiComponent": "sensor",
+      "icon": "/assets/capabilities/fan_speed_icon.svg"
     },
     "fancoil_mode": {
       "type": "enum",
@@ -290,6 +314,7 @@
       ],
       "getable": true,
       "setable": true,
+      "insights": true,
       "uiComponent": "picker"
     },
     "fancoil_mode_state": {
@@ -348,7 +373,9 @@
       ],
       "getable": true,
       "setable": false,
-      "uiComponent": "sensor"
+      "insights": true,
+      "uiComponent": "sensor",
+      "icon": "/assets/capabilities/fancoil_mode_icon.svg"
     }
   },
   "discovery": {

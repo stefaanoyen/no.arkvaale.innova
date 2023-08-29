@@ -54,5 +54,6 @@
   ],
   "getable": true,
   "setable": true,
+  "insights": true,
   "uiComponent": "picker"
 }

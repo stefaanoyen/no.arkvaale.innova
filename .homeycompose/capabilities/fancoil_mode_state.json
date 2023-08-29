@@ -54,5 +54,7 @@
   ],
   "getable": true,
   "setable": false,
-  "uiComponent": "sensor"
+  "insights": true,
+  "uiComponent": "sensor",
+  "icon": "/assets/capabilities/fancoil_mode_icon.svg"
 }

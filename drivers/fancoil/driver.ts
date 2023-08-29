@@ -1,4 +1,5 @@
 import Homey from 'homey';
+import PROCESS from 'process';
 
 class FancoilDriver extends Homey.Driver {
   /**
@@ -13,6 +14,19 @@ class FancoilDriver extends Homey.Driver {
    * This should return an array with the data of devices that are available for pairing.
    */
   async onPairListDevices() {
+    if (PROCESS.env.DEBUG === '1') {
+      return [
+        {
+          name: 'Innova Fancoil2',
+          data: {
+            id: '44:17:93:33:46:eb',
+          },
+          settings: {
+            ip: 'localhost:5000',
+          },
+        },
+      ];
+    }
     const discoveryStrategy = this.getDiscoveryStrategy();
     const discoveryResults = Object.values(discoveryStrategy.getDiscoveryResults());
     return discoveryResults.map((discoveryResult) => {

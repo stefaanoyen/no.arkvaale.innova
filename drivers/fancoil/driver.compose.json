@@ -14,9 +14,30 @@
     "fancoil_mode_state",
     "fan_speed",
     "fan_speed_state",
-    "alarm_generic"
+    "alarm_generic",
+    "onoff.scheduling"
   ],
   "capabilitiesOptions": {
+    "onoff": {
+      "title": {
+        "en": "Power",
+        "no": "Power"
+      }
+    },
+    "onoff.scheduling": {
+      "title": {
+        "en": "Scheduling",
+        "no": "Planlegging"
+      },
+      "insightsTitleTrue": {
+        "en": "Scheduling activated",
+        "no": "Planlegging aktivert"
+      },
+      "insightsTitleFalse": {
+        "en": "Scheduling deactivated",
+        "no": "Planlegging deaktivert"
+      }
+    },
     "target_temperature": {
       "min": 16,
       "max": 28,
@@ -27,8 +48,8 @@
     },
     "measure_temperature.target": {
       "title": {
-        "en": "Set temperature",
-        "no": "Satt temperatur"
+        "en": "Target temperature",
+        "no": "Mål temperatur"
       },
       "decimals": 1,
       "units": {
@@ -66,12 +87,8 @@
       }
     }
   },
-  "platforms": [
-    "local"
-  ],
-  "connectivity": [
-    "lan"
-  ],
+  "platforms": ["local"],
+  "connectivity": ["lan"],
   "discovery": "mac",
   "pair": [
     {
