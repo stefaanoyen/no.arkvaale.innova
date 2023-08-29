@@ -16,5 +16,8 @@
   },
   "1.0.5": {
     "en": "Added sensors with state of different temperatures, fan, mode and alarm"
+  },
+  "1.0.6": {
+    "en": "Added scheduling onoff capability, update sensor states and added sensor icons"
   }
 }
