@@ -1,6 +1,6 @@
 {
   "id": "no.arkvaale.innova",
-  "version": "1.0.6",
+  "version": "1.1.2",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#5fc5df",
@@ -11,7 +11,7 @@
     "en": "Innova Fancoil"
   },
   "description": {
-    "en": "App for Innova WiFi connected fancoils"
+    "en": "Keep your home at the perfect temperature"
   },
   "category": [
     "climate"
