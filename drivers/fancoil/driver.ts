@@ -45,77 +45,75 @@ class FancoilDriver extends Homey.Driver {
       this.log('Innova app - get_devices data: ' + JSON.stringify(data));
       if (currentDevicesIps.includes(data.ip)) {
         await session.emit('already_added', data.ip);
-        return;
-      }
-      // if (PROCESS.env.DEBUG === '1') {
-      //   devices.push({
-      //     name: data.name,
-      //     data: {
-      //       id: (Math.random() + 1).toString(36).substring(7),
-      //     },
-      //     settings: {
-      //       ip: data.ip,
-      //     },
-      //   });
-      //
-      //   await session.emit('found', null);
-      //   return;
-      // }
-      await session.emit('loading', null);
-      const uri = `http://${data.ip}/api/v/1/status`;
-      await axios
-        .get(uri)
-        .then((res) => {
-          session.emit('stop_loading', null);
-          if (res) {
-            const statusResponse = res.data as StatusResponse;
-            if (!statusResponse.success) {
-              session.emit('api_error', 'Status success from Innova API was false');
-              this.log('Innova app - response is not ok');
-            } else {
-              this.log('Innova app - response is ok');
-              devices.push({
-                name: data.name,
-                data: { id: statusResponse.UID },
-                settings: { ip: data.ip },
-              });
+      } else {
+        // if (PROCESS.env.DEBUG === '1') {
+        //   devices.push({
+        //     name: data.name,
+        //     data: {
+        //       id: (Math.random() + 1).toString(36).substring(7),
+        //     },
+        //     settings: {
+        //       ip: data.ip,
+        //     },
+        //   });
+        //
+        //   await session.emit('found', null);
+        //   return;
+        // }
+        const uri = `http://${data.ip}/api/v/1/status`;
+        await axios
+          .get(uri)
+          .then((res) => {
+            if (res) {
+              const statusResponse = res.data as StatusResponse;
+              if (!statusResponse.success) {
+                session.emit('api_error', 'Status success from Innova API was false');
+                this.log('Innova app - response is not ok');
+              } else {
+                this.log('Innova app - response is ok');
+                devices.push({
+                  name: data.name,
+                  data: { id: statusResponse.UID },
+                  settings: { ip: data.ip },
+                });
 
-              // ready to continue pairing
-              session.emit('found', null);
+                // ready to continue pairing
+                session.emit('found', null);
+              }
+            } else {
+              session.emit('api_error', 'Got no result from Innova API');
+              this.log('Fetch of current status failed!');
             }
-          } else {
-            session.emit('api_error', 'Got no result from Innova API');
-            this.log('Fetch of current status failed!');
-          }
-        })
-        .catch((error) => {
-          session.emit('stop_loading', null);
-          session.emit('api_error', JSON.stringify(error));
-          this.log('Fetch of current status failed!', error);
-        });
+          })
+          .catch((error) => {
+            session.emit('api_error', error.message);
+            this.log('Fetch of current status failed!', error.message);
+          });
+      }
     });
 
     // this method is run when Homey.emit('list_devices') is run on the front-end
     // which happens when you use the template `list_devices`
     // pairing: start.html -> get_devices -> list_devices -> add_devices
-    session.setHandler('list_devices', async (_data) => {
+    session.setHandler('list_devices', async (data) => {
+      this.log('Innova app - list_devices data: ' + JSON.stringify(data));
       this.log('Innova app - list_devices devices: ' + JSON.stringify(devices));
       return devices;
     });
 
-    if (PROCESS.env.DEBUG === '1' && !currentDevicesIps.includes('localhost:5000')) {
-      devices.push({
-        name: 'Innova Fancoil2',
-        data: {
-          id: (Math.random() + 1).toString(36).substring(7),
-        },
-        settings: {
-          ip: 'localhost:5000',
-        },
-      });
-      await session.emit('found', null);
-      return;
-    }
+    // if (PROCESS.env.DEBUG === '1' && !currentDevicesIps.includes('localhost:5000')) {
+    //   devices.push({
+    //     name: 'Innova Fancoil2',
+    //     data: {
+    //       id: (Math.random() + 1).toString(36).substring(7),
+    //     },
+    //     settings: {
+    //       ip: 'localhost:5000',
+    //     },
+    //   });
+    //   await session.emit('found', null);
+    //   return;
+    // }
   }
 
   /**

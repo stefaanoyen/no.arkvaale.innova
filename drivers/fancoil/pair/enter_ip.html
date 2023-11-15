@@ -11,23 +11,18 @@
   });
 
   Homey.on('found', function () {
+    Homey.hideLoadingOverlay();
     Homey.showView('list_fancoil_devices');
   });
 
   Homey.on('api_error', function (error) {
+    Homey.hideLoadingOverlay();
     Homey.alert(__('pair.start.error', { error }), 'error');
   });
 
-  Homey.on('already_added', function (ip) {
-    Homey.alert(__('pair.start.alreadyAdded', { ip }), 'error');
-  });
-
-  Homey.on('loading', function () {
-    Homey.showLoadingOverlay();
-  });
-
-  Homey.on('stop_loading', function () {
+  Homey.on('already_added', async function (ip) {
     Homey.hideLoadingOverlay();
+    Homey.alert(__('pair.start.alreadyAdded', { ip }), 'error');
   });
 
   function saveSettings() {
@@ -35,37 +30,15 @@
     const inputIPAddress = document.getElementById('ip').value;
     const inputDeviceName = document.getElementById('name').value;
 
-    // IP is required
-    if (inputIPAddress === '') {
-      // Give error, required values
-      Homey.alert(__('pair.start.required'), 'error');
-      return;
-    }
-
-    // Name is required
-    if (inputDeviceName === '') {
-      // Give error, required values
-      Homey.alert(__('pair.start.requiredName'), 'error');
-      return;
-    }
-
-    // create Regular Expression that validates for IPv4 addresses, then do the actual test on the input.
-    const Ipv4RegEx = new RegExp(
-      '^(([01]?\\d\\d?|2[0-4]\\d|25[0-5]).){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$',
-    );
-    const IPInputOK = Ipv4RegEx.test(inputIPAddress);
-    if (!IPInputOK) {
-      Homey.alert(__('pair.start.invalidIP'), 'error');
-      return;
-    }
-
     // Build data array
     const data = {
       ip: inputIPAddress,
       name: inputDeviceName,
     };
     // Continue to back-end, pass along data
+    Homey.showLoadingOverlay();
     Homey.emit('get_devices', data);
+    Homey.hideLoadingOverlay();
   }
 </script>
 
@@ -74,7 +47,7 @@
   <p class="homey-subtitle" data-i18n="pair.start.intro"></p>
 </header>
 
-<form class="homey-form">
+<form class="homey-form" onsubmit="saveSettings()">
   <fieldset class="homey-form-fieldset">
     <legend class="homey-form-legend" data-i18n="pair.start.deviceInfo">Device info</legend>
     <div class="homey-form-group">
@@ -83,6 +56,7 @@
         class="homey-form-input"
         id="ip"
         type="text"
+        pattern="^(([01]?\d\d?|2[0-4]\d|25[0-5]).){3}([01]?\d\d?|2[0-4]\d|25[0-5])$"
         placeholder="192.168.1.10"
         required
       />
@@ -91,10 +65,6 @@
       <label class="homey-form-label" data-i18n="pair.start.deviceName" for="name">Name</label>
       <input class="homey-form-input" id="name" type="text" placeholder="Innova" required />
     </div>
-    <button
-      class="homey-button-primary-full"
-      data-i18n="pair.start.saveSettings"
-      onclick="saveSettings()"
-    ></button>
+    <button class="homey-button-primary-full" data-i18n="pair.start.saveSettings"></button>
   </fieldset>
 </form>
