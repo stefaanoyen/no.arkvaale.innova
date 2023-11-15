@@ -1,6 +1,4 @@
 <script type="application/javascript">
-  Homey.setTitle(__('pair.start.title'));
-
   Homey.on('error', function (errortype) {
     if (errortype === 'error') {
       Homey.alert(__('pair.start.error'), 'error');
@@ -24,6 +22,14 @@
     Homey.alert(__('pair.start.alreadyAdded', { ip }), 'error');
   });
 
+  Homey.on('loading', function () {
+    Homey.showLoadingOverlay();
+  });
+
+  Homey.on('stop_loading', function () {
+    Homey.hideLoadingOverlay();
+  });
+
   function saveSettings() {
     // variables
     const inputIPAddress = document.getElementById('ip').value;
@@ -33,6 +39,13 @@
     if (inputIPAddress === '') {
       // Give error, required values
       Homey.alert(__('pair.start.required'), 'error');
+      return;
+    }
+
+    // Name is required
+    if (inputDeviceName === '') {
+      // Give error, required values
+      Homey.alert(__('pair.start.requiredName'), 'error');
       return;
     }
 
@@ -56,30 +69,32 @@
   }
 </script>
 
-<p data-i18n="pair.start.intro"></p>
+<header class="homey-header">
+  <h1 class="homey-title" data-i18n="pair.start.title"></h1>
+  <p class="homey-subtitle" data-i18n="pair.start.intro"></p>
+</header>
 
-<style>
-  input {
-    font-size: 16px;
-  }
-</style>
-
-<fieldset>
-  <label data-i18n="pair.start.ipAddress" for="ip">IP</label>
-  <input
-    id="ip"
-    type="text"
-    pattern="^(([01]?\\d\\d?|2[0-4]\\d|25[0-5]).){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$"
-    placeholder="192.168.1.10"
-    required
-  />
-</fieldset>
-
-<fieldset>
-  <label data-i18n="pair.start.deviceName" for="name">Name</label>
-  <input id="name" type="text" placeholder="Innova" />
-</fieldset>
-
-<fieldset>
-  <button class="button" data-i18n="pair.start.saveSettings" onclick="saveSettings()">Save</button>
-</fieldset>
+<form class="homey-form">
+  <fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-i18n="pair.start.deviceInfo">Device info</legend>
+    <div class="homey-form-group">
+      <label class="homey-form-label" data-i18n="pair.start.ipAddress" for="ip">IP</label>
+      <input
+        class="homey-form-input"
+        id="ip"
+        type="text"
+        placeholder="192.168.1.10"
+        required
+      />
+    </div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" data-i18n="pair.start.deviceName" for="name">Name</label>
+      <input class="homey-form-input" id="name" type="text" placeholder="Innova" required />
+    </div>
+    <button
+      class="homey-button-primary-full"
+      data-i18n="pair.start.saveSettings"
+      onclick="saveSettings()"
+    ></button>
+  </fieldset>
+</form>

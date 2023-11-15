@@ -4,7 +4,6 @@ import PairSession from 'homey/lib/PairSession';
 import { Device, DeviceDataInput } from '../../interfaces/device.interface';
 import axios from 'axios';
 import { StatusResponse } from '../../interfaces/innova-api.interface';
-// import { v4 as uuid } from 'uuid';
 
 class FancoilDriver extends Homey.Driver {
   /**
@@ -16,19 +15,9 @@ class FancoilDriver extends Homey.Driver {
 
   async onPair(session: PairSession) {
     const devices: Device[] = [];
-    // if (PROCESS.env.DEBUG === '1') {
-    //   devices.push({
-    //     name: 'Innova Fancoil2',
-    //     data: {
-    //       id: uuid(),
-    //     },
-    //     settings: {
-    //       ip: 'localhost:5000',
-    //     },
-    //   });
-    //   await session.emit('found', null);
-    // }
     const currentDevicesIds: string[] = this.getDevices().map((d) => d.getData().id);
+    const currentDevicesIps: string[] = this.getDevices().map((d) => d.getSetting('ip'));
+
     const discoveryStrategy = this.getDiscoveryStrategy();
     const discoveryResults = Object.values(discoveryStrategy.getDiscoveryResults()).filter(
       (d) => !currentDevicesIds.includes(d.id),
@@ -53,17 +42,16 @@ class FancoilDriver extends Homey.Driver {
 
     // this is called when the user presses save settings button in start.html
     session.setHandler('get_devices', async (data: DeviceDataInput) => {
-      const currentDevicesIps: string[] = this.getDevices().map((d) => d.getSetting('ip'));
+      this.log('Innova app - get_devices data: ' + JSON.stringify(data));
       if (currentDevicesIps.includes(data.ip)) {
         await session.emit('already_added', data.ip);
         return;
       }
-      this.log('Innova app - get_devices data: ' + JSON.stringify(data));
       // if (PROCESS.env.DEBUG === '1') {
       //   devices.push({
       //     name: data.name,
       //     data: {
-      //       id: uuid(),
+      //       id: (Math.random() + 1).toString(36).substring(7),
       //     },
       //     settings: {
       //       ip: data.ip,
@@ -73,10 +61,12 @@ class FancoilDriver extends Homey.Driver {
       //   await session.emit('found', null);
       //   return;
       // }
+      await session.emit('loading', null);
       const uri = `http://${data.ip}/api/v/1/status`;
       await axios
         .get(uri)
         .then((res) => {
+          session.emit('stop_loading', null);
           if (res) {
             const statusResponse = res.data as StatusResponse;
             if (!statusResponse.success) {
@@ -99,6 +89,7 @@ class FancoilDriver extends Homey.Driver {
           }
         })
         .catch((error) => {
+          session.emit('stop_loading', null);
           session.emit('api_error', JSON.stringify(error));
           this.log('Fetch of current status failed!', error);
         });
@@ -107,12 +98,24 @@ class FancoilDriver extends Homey.Driver {
     // this method is run when Homey.emit('list_devices') is run on the front-end
     // which happens when you use the template `list_devices`
     // pairing: start.html -> get_devices -> list_devices -> add_devices
-    session.setHandler('list_devices', async (data) => {
-      this.log('Innova app - list_devices data: ' + JSON.stringify(data));
+    session.setHandler('list_devices', async (_data) => {
       this.log('Innova app - list_devices devices: ' + JSON.stringify(devices));
-
       return devices;
     });
+
+    if (PROCESS.env.DEBUG === '1' && !currentDevicesIps.includes('localhost:5000')) {
+      devices.push({
+        name: 'Innova Fancoil2',
+        data: {
+          id: (Math.random() + 1).toString(36).substring(7),
+        },
+        settings: {
+          ip: 'localhost:5000',
+        },
+      });
+      await session.emit('found', null);
+      return;
+    }
   }
 
   /**

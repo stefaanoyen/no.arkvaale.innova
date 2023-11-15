@@ -7,9 +7,11 @@
       "invalidIP": "Please enter a valid IPv4 address, e.g. 192.168.1.10",
       "ipAddress": "IP address",
       "required": "IP address is a required value.",
+      "requiredName": "Device name is a required value.",
       "saveSettings": "Save settings",
       "title": "Connect device...",
-      "alreadyAdded": "Fancoil with IP __ip__ already added."
+      "alreadyAdded": "Fancoil with IP __ip__ already added.",
+      "deviceInfo": "Device info"
     }
   }
 }
