@@ -1,6 +1,6 @@
 {
-  "id": "no.arkvaale.innova",
-  "version": "1.2.0",
+  "id": "no.arkvaale.innova2",
+  "version": "1.2.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#5fc5df",
@@ -8,7 +8,7 @@
     "local"
   ],
   "name": {
-    "en": "Innova Fancoil"
+    "en": "Innova Fancoil2"
   },
   "description": {
     "en": "Keep your home at the perfect temperature"

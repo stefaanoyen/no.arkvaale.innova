@@ -34,5 +34,8 @@
   },
   "1.2.0": {
     "en": "Added possibility to add fancoils through IP address if none was found by MAC address"
+  },
+  "1.2.1": {
+    "en": "Minor fixes"
   }
 }
