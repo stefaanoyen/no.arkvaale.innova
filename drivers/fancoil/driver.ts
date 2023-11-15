@@ -4,7 +4,7 @@ import PairSession from 'homey/lib/PairSession';
 import { Device, DeviceDataInput } from '../../interfaces/device.interface';
 import axios from 'axios';
 import { StatusResponse } from '../../interfaces/innova-api.interface';
-import { v4 as uuid } from 'uuid';
+// import { v4 as uuid } from 'uuid';
 
 class FancoilDriver extends Homey.Driver {
   /**
@@ -16,18 +16,18 @@ class FancoilDriver extends Homey.Driver {
 
   async onPair(session: PairSession) {
     const devices: Device[] = [];
-    if (PROCESS.env.DEBUG === '1') {
-      devices.push({
-        name: 'Innova Fancoil2',
-        data: {
-          id: uuid(),
-        },
-        settings: {
-          ip: 'localhost:5000',
-        },
-      });
-      await session.emit('found', null);
-    }
+    // if (PROCESS.env.DEBUG === '1') {
+    //   devices.push({
+    //     name: 'Innova Fancoil2',
+    //     data: {
+    //       id: uuid(),
+    //     },
+    //     settings: {
+    //       ip: 'localhost:5000',
+    //     },
+    //   });
+    //   await session.emit('found', null);
+    // }
     const currentDevicesIds: string[] = this.getDevices().map((d) => d.getData().id);
     const discoveryStrategy = this.getDiscoveryStrategy();
     const discoveryResults = Object.values(discoveryStrategy.getDiscoveryResults()).filter(
@@ -59,20 +59,20 @@ class FancoilDriver extends Homey.Driver {
         return;
       }
       this.log('Innova app - get_devices data: ' + JSON.stringify(data));
-      if (PROCESS.env.DEBUG === '1') {
-        devices.push({
-          name: data.name,
-          data: {
-            id: uuid(),
-          },
-          settings: {
-            ip: data.ip,
-          },
-        });
-
-        await session.emit('found', null);
-        return;
-      }
+      // if (PROCESS.env.DEBUG === '1') {
+      //   devices.push({
+      //     name: data.name,
+      //     data: {
+      //       id: uuid(),
+      //     },
+      //     settings: {
+      //       ip: data.ip,
+      //     },
+      //   });
+      //
+      //   await session.emit('found', null);
+      //   return;
+      // }
       const uri = `http://${data.ip}/api/v/1/status`;
       await axios
         .get(uri)
