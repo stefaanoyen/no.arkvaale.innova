@@ -31,5 +31,8 @@
   },
   "1.1.3": {
     "en": "Added another manufacturer mac address"
+  },
+  "1.2.0": {
+    "en": "Added possibility to add fancoils through IP address if none was found by MAC address"
   }
 }
