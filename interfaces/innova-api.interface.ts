@@ -4,6 +4,7 @@ export interface CommandSent {
 
 export interface StatusResponse {
   success: boolean;
+  UID: string;
   RESULT: result;
 }
 

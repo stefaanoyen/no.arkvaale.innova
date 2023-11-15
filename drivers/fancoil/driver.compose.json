@@ -92,6 +92,9 @@
   "discovery": "mac",
   "pair": [
     {
+      "id": "enter_ip"
+    },
+    {
       "id": "list_fancoil_devices",
       "template": "list_devices",
       "navigation": { "next": "add_fancoil_devices" },

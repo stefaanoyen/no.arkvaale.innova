@@ -1,0 +1,85 @@
+<script type="application/javascript">
+  Homey.setTitle(__('pair.start.title'));
+
+  Homey.on('error', function (errortype) {
+    if (errortype === 'error') {
+      Homey.alert(__('pair.start.error'), 'error');
+      Homey.done();
+    }
+    if (errortype === 'nosettings') {
+      Homey.alert(__('pair.start.nosettings'), 'error');
+      Homey.done();
+    }
+  });
+
+  Homey.on('found', function () {
+    Homey.showView('list_fancoil_devices');
+  });
+
+  Homey.on('api_error', function (error) {
+    Homey.alert(__('pair.start.error', { error }), 'error');
+  });
+
+  Homey.on('already_added', function (ip) {
+    Homey.alert(__('pair.start.alreadyAdded', { ip }), 'error');
+  });
+
+  function saveSettings() {
+    // variables
+    const inputIPAddress = document.getElementById('ip').value;
+    const inputDeviceName = document.getElementById('name').value;
+
+    // IP is required
+    if (inputIPAddress === '') {
+      // Give error, required values
+      Homey.alert(__('pair.start.required'), 'error');
+      return;
+    }
+
+    // create Regular Expression that validates for IPv4 addresses, then do the actual test on the input.
+    const Ipv4RegEx = new RegExp(
+      '^(([01]?\\d\\d?|2[0-4]\\d|25[0-5]).){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$',
+    );
+    const IPInputOK = Ipv4RegEx.test(inputIPAddress);
+    if (!IPInputOK) {
+      Homey.alert(__('pair.start.invalidIP'), 'error');
+      return;
+    }
+
+    // Build data array
+    const data = {
+      ip: inputIPAddress,
+      name: inputDeviceName,
+    };
+    // Continue to back-end, pass along data
+    Homey.emit('get_devices', data);
+  }
+</script>
+
+<p data-i18n="pair.start.intro"></p>
+
+<style>
+  input {
+    font-size: 16px;
+  }
+</style>
+
+<fieldset>
+  <label data-i18n="pair.start.ipAddress" for="ip">IP</label>
+  <input
+    id="ip"
+    type="text"
+    pattern="^(([01]?\\d\\d?|2[0-4]\\d|25[0-5]).){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$"
+    placeholder="192.168.1.10"
+    required
+  />
+</fieldset>
+
+<fieldset>
+  <label data-i18n="pair.start.deviceName" for="name">Name</label>
+  <input id="name" type="text" placeholder="Innova" />
+</fieldset>
+
+<fieldset>
+  <button class="button" data-i18n="pair.start.saveSettings" onclick="saveSettings()">Save</button>
+</fieldset>
