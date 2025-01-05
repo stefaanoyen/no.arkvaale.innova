@@ -4,7 +4,6 @@ import Homey, { DiscoveryResult, DiscoveryResultMAC } from 'homey';
 import axios from 'axios';
 import PROCESS from 'process';
 import { CommandSent, result, StatusResponse } from '../../interfaces/innova-api.interface';
-import {debug} from "node:util";
 
 class FancoilDevice extends Homey.Device {
 
