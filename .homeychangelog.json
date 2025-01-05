@@ -49,5 +49,8 @@
   },
   "1.3.0": {
     "en": "Added flow cards for thermostat mode and fan speed"
+  },
+  "1.4.0": {
+    "en": "Moved flow cards to driver"
   }
 }
