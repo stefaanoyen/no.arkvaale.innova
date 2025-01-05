@@ -52,5 +52,8 @@
   },
   "1.4.0": {
     "en": "Moved flow cards to driver"
+  },
+  "1.4.1": {
+    "en": "Minor fixes"
   }
 }
