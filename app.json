@@ -42,60 +42,7 @@
   "flow": {
     "conditions": [
       {
-        "title": {
-          "en": "The fan speed !{{is|is not}}",
-          "no": "Vifte hastigheten !{{er|er ikke}}"
-        },
-        "titleFormatted": {
-          "en": "The fan speed !{{is|is not}} [[fan_speed]]",
-          "no": "Vifte hastigheten !{{er|er ikke}} [[fan_speed]]"
-        },
-        "args": [
-          {
-            "type": "dropdown",
-            "name": "fan_speed",
-            "values": [
-              {
-                "id": "auto",
-                "label": {
-                  "en": "Automatic",
-                  "nl": "Automatisch",
-                  "de": "Automatisch",
-                  "fr": "Automatique",
-                  "it": "Automatica",
-                  "sv": "Automatiskt",
-                  "no": "Automatisk",
-                  "es": "Automático",
-                  "da": "Automatisk"
-                }
-              },
-              {
-                "id": "min",
-                "label": {
-                  "en": "Minimum",
-                  "no": "Minimum"
-                }
-              },
-              {
-                "id": "max",
-                "label": {
-                  "en": "Maximum",
-                  "no": "Maksimum"
-                }
-              },
-              {
-                "id": "night",
-                "label": {
-                  "en": "Night",
-                  "no": "Natt"
-                }
-              }
-            ]
-          }
-        ],
-        "id": "fan-speed-is"
-      },
-      {
+        "id": "fancoil-mode-is",
         "title": {
           "en": "Thermostat mode !{{is|is not}}",
           "no": "Termostatmodusen !{{er|er ikke}}"
@@ -106,6 +53,11 @@
         },
         "args": [
           {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fancoil"
+          },
+          {
             "type": "dropdown",
             "name": "fancoil_mode",
             "values": [
@@ -139,21 +91,24 @@
               }
             ]
           }
-        ],
-        "id": "fancoil-mode-is"
-      }
-    ],
-    "actions": [
+        ]
+      },
       {
+        "id": "fan-speed-is",
         "title": {
-          "en": "Set the fan speed mode",
-          "no": "Sett vifte hastigheten"
+          "en": "The fan speed !{{is|is not}}",
+          "no": "Vifte hastigheten !{{er|er ikke}}"
         },
         "titleFormatted": {
-          "en": "Set the fan speed mode to [[fan_speed]]",
-          "no": "Sett vifte hastigheten til [[fan_speed]]"
+          "en": "The fan speed !{{is|is not}} [[fan_speed]]",
+          "no": "Vifte hastigheten !{{er|er ikke}} [[fan_speed]]"
         },
         "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fancoil"
+          },
           {
             "type": "dropdown",
             "name": "fan_speed",
@@ -195,10 +150,12 @@
               }
             ]
           }
-        ],
-        "id": "set-fan-speed-mode"
-      },
+        ]
+      }
+    ],
+    "actions": [
       {
+        "id": "set-fancoil-mode",
         "title": {
           "en": "Set the thermostat mode",
           "no": "Sett termostatmodus"
@@ -208,6 +165,11 @@
           "no": "Sett termostatmodus til [[fancoil_mode]]"
         },
         "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fancoil"
+          },
           {
             "type": "dropdown",
             "name": "fancoil_mode",
@@ -242,8 +204,66 @@
               }
             ]
           }
-        ],
-        "id": "set-fancoil-mode"
+        ]
+      },
+      {
+        "id": "set-fan-speed-mode",
+        "title": {
+          "en": "Set the fan speed mode",
+          "no": "Sett vifte hastigheten"
+        },
+        "titleFormatted": {
+          "en": "Set the fan speed mode to [[fan_speed]]",
+          "no": "Sett vifte hastigheten til [[fan_speed]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fancoil"
+          },
+          {
+            "type": "dropdown",
+            "name": "fan_speed",
+            "values": [
+              {
+                "id": "auto",
+                "label": {
+                  "en": "Automatic",
+                  "nl": "Automatisch",
+                  "de": "Automatisch",
+                  "fr": "Automatique",
+                  "it": "Automatica",
+                  "sv": "Automatiskt",
+                  "no": "Automatisk",
+                  "es": "Automático",
+                  "da": "Automatisk"
+                }
+              },
+              {
+                "id": "min",
+                "label": {
+                  "en": "Minimum",
+                  "no": "Minimum"
+                }
+              },
+              {
+                "id": "max",
+                "label": {
+                  "en": "Maximum",
+                  "no": "Maksimum"
+                }
+              },
+              {
+                "id": "night",
+                "label": {
+                  "en": "Night",
+                  "no": "Natt"
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   },

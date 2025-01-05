@@ -1,0 +1,208 @@
+{
+  "actions": [
+    {
+      "id": "set-fancoil-mode",
+      "title": {
+        "en": "Set the thermostat mode",
+        "no": "Sett termostatmodus"
+      },
+      "titleFormatted": {
+        "en": "Set the thermostat mode to [[fancoil_mode]]",
+        "no": "Sett termostatmodus til [[fancoil_mode]]"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "fancoil_mode",
+          "values": [
+            {
+              "id": "heat",
+              "label": {
+                "en": "Heat",
+                "nl": "Verhitten",
+                "de": "Heizen",
+                "fr": "Chauffer",
+                "it": "Calore",
+                "sv": "Värme",
+                "no": "Varme",
+                "es": "Calentar",
+                "da": "Opvarm"
+              }
+            },
+            {
+              "id": "cool",
+              "label": {
+                "en": "Cool",
+                "nl": "Koelen",
+                "de": "Kühlen",
+                "fr": "Refroidir",
+                "it": "Raffreddamento",
+                "sv": "Kyla",
+                "no": "Avkjøle",
+                "es": "Enfriar",
+                "da": "Køl ned"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "set-fan-speed-mode",
+      "title": {
+        "en": "Set the fan speed mode",
+        "no": "Sett vifte hastigheten"
+      },
+      "titleFormatted": {
+        "en": "Set the fan speed mode to [[fan_speed]]",
+        "no": "Sett vifte hastigheten til [[fan_speed]]"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "fan_speed",
+          "values": [
+            {
+              "id": "auto",
+              "label": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "de": "Automatisch",
+                "fr": "Automatique",
+                "it": "Automatica",
+                "sv": "Automatiskt",
+                "no": "Automatisk",
+                "es": "Automático",
+                "da": "Automatisk"
+              }
+            },
+            {
+              "id": "min",
+              "label": {
+                "en": "Minimum",
+                "no": "Minimum"
+              }
+            },
+            {
+              "id": "max",
+              "label": {
+                "en": "Maximum",
+                "no": "Maksimum"
+              }
+            },
+            {
+              "id": "night",
+              "label": {
+                "en": "Night",
+                "no": "Natt"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "conditions": [
+    {
+      "id": "fancoil-mode-is",
+      "title": {
+        "en": "Thermostat mode !{{is|is not}}",
+        "no": "Termostatmodusen !{{er|er ikke}}"
+      },
+      "titleFormatted": {
+        "en": "Thermostat mode !{{is|is not}} [[fancoil_mode]]",
+        "no": "Termostatmodusen !{{er|er ikke}} [[fancoil_mode]]"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "fancoil_mode",
+          "values": [
+            {
+              "id": "heat",
+              "label": {
+                "en": "Heat",
+                "nl": "Verhitten",
+                "de": "Heizen",
+                "fr": "Chauffer",
+                "it": "Calore",
+                "sv": "Värme",
+                "no": "Varme",
+                "es": "Calentar",
+                "da": "Opvarm"
+              }
+            },
+            {
+              "id": "cool",
+              "label": {
+                "en": "Cool",
+                "nl": "Koelen",
+                "de": "Kühlen",
+                "fr": "Refroidir",
+                "it": "Raffreddamento",
+                "sv": "Kyla",
+                "no": "Avkjøle",
+                "es": "Enfriar",
+                "da": "Køl ned"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fan-speed-is",
+      "title": {
+        "en": "The fan speed !{{is|is not}}",
+        "no": "Vifte hastigheten !{{er|er ikke}}"
+      },
+      "titleFormatted": {
+        "en": "The fan speed !{{is|is not}} [[fan_speed]]",
+        "no": "Vifte hastigheten !{{er|er ikke}} [[fan_speed]]"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "fan_speed",
+          "values": [
+            {
+              "id": "auto",
+              "label": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "de": "Automatisch",
+                "fr": "Automatique",
+                "it": "Automatica",
+                "sv": "Automatiskt",
+                "no": "Automatisk",
+                "es": "Automático",
+                "da": "Automatisk"
+              }
+            },
+            {
+              "id": "min",
+              "label": {
+                "en": "Minimum",
+                "no": "Minimum"
+              }
+            },
+            {
+              "id": "max",
+              "label": {
+                "en": "Maximum",
+                "no": "Maksimum"
+              }
+            },
+            {
+              "id": "night",
+              "label": {
+                "en": "Night",
+                "no": "Natt"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
