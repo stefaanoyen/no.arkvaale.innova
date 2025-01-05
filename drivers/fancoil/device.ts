@@ -48,9 +48,9 @@ class FancoilDevice extends Homey.Device {
     });
     const fancoilModeAction = this.homey.flow.getActionCard('set-fancoil-mode');
     fancoilModeAction.registerRunListener(async (args) => {
-      const { fancoilMode } = args;
-      this.setCapabilityValue('fancoil_mode', fancoilMode).catch(this.error);
-      await this.onCapabilityFancoilMode(fancoilMode);
+      const { fancoil_mode } = args;
+      this.setCapabilityValue('fancoil_mode', fancoil_mode).catch(this.error);
+      await this.onCapabilityFancoilMode(fancoil_mode);
     });
     const fanSpeedCondition = this.homey.flow.getConditionCard('fan-speed-is');
     fanSpeedCondition.registerRunListener(async (args) => {
@@ -59,9 +59,9 @@ class FancoilDevice extends Homey.Device {
     });
     const fanSpeedAction = this.homey.flow.getActionCard('set-fan-speed-mode');
     fanSpeedAction.registerRunListener(async (args) => {
-      const { fanSpeed } = args;
-      this.setCapabilityValue('fan_speed', fanSpeed).catch(this.error);
-      await this.onCapabilityFanSpeed(fanSpeed);
+      const { fan_speed } = args;
+      this.setCapabilityValue('fan_speed', fan_speed).catch(this.error);
+      await this.onCapabilityFanSpeed(fan_speed);
     });
   }
 
