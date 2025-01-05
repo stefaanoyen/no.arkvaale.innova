@@ -1,5 +1,4 @@
 import Homey from 'homey';
-import PROCESS from 'process';
 import PairSession from 'homey/lib/PairSession';
 import { Device, DeviceDataInput } from '../../interfaces/device.interface';
 import axios from 'axios';

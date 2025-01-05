@@ -3,10 +3,9 @@
 import Homey, { DiscoveryResult, DiscoveryResultMAC } from 'homey';
 import axios from 'axios';
 import PROCESS from 'process';
-import { CommandSent, result, StatusResponse } from '../../interfaces/innova-api.interface';
+import { CommandSent, Result, StatusResponse } from '../../interfaces/innova-api.interface';
 
 class FancoilDevice extends Homey.Device {
-
   refreshInterval: NodeJS.Timeout | undefined;
 
   /**
@@ -49,7 +48,9 @@ class FancoilDevice extends Homey.Device {
     });
     const fancoilModeAction = this.homey.flow.getActionCard('set-fancoil-mode');
     fancoilModeAction.registerRunListener(async (args) => {
-      await this.onCapabilityFancoilMode(args.fancoil_mode);
+      const { fancoilMode } = args;
+      this.setCapabilityValue('fancoil_mode', fancoilMode).catch(this.error);
+      await this.onCapabilityFancoilMode(fancoilMode);
     });
     const fanSpeedCondition = this.homey.flow.getConditionCard('fan-speed-is');
     fanSpeedCondition.registerRunListener(async (args) => {
@@ -58,7 +59,9 @@ class FancoilDevice extends Homey.Device {
     });
     const fanSpeedAction = this.homey.flow.getActionCard('set-fan-speed-mode');
     fanSpeedAction.registerRunListener(async (args) => {
-      await this.onCapabilityFanSpeed(args.fan_speed);
+      const { fanSpeed } = args;
+      this.setCapabilityValue('fan_speed', fanSpeed).catch(this.error);
+      await this.onCapabilityFanSpeed(fanSpeed);
     });
   }
 
@@ -228,7 +231,7 @@ class FancoilDevice extends Homey.Device {
       });
   }
 
-  setCapabilityValues(result: result) {
+  setCapabilityValues(result: Result) {
     this.setCapabilityValue('onoff', result.ps === 1).catch(this.error);
     this.setCapabilityValue('onoff.scheduling', result.cm === 1).catch(this.error);
     const targetTemperature = result.sp / 10;
@@ -285,7 +288,7 @@ class FancoilDevice extends Homey.Device {
     }
   }
 
-  private getMockResult(): result {
+  private getMockResult(): Result {
     return {
       sp: 220,
       wm: 3,
@@ -297,7 +300,6 @@ class FancoilDevice extends Homey.Device {
       cm: 0,
     };
   }
-
 }
 
 module.exports = FancoilDevice;

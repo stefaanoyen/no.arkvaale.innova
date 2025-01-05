@@ -5,10 +5,10 @@ export interface CommandSent {
 export interface StatusResponse {
   success: boolean;
   UID: string;
-  RESULT: result;
+  RESULT: Result;
 }
 
-export interface result {
+export interface Result {
   sp: number; // Temperature Set point (x10)
   wm: number; // Working Mode: 3=heating. 5=cooling
   fn: number; // Fan Function: 1=auto, 2=night, 3=min, 4=ma
