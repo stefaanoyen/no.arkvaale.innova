@@ -58,5 +58,8 @@
   },
   "1.4.2": {
     "en": "Minor flow fixes"
+  },
+  "1.5.0": {
+    "en": "Moved flow initializing to driver class"
   }
 }
