@@ -10,6 +10,32 @@ class FancoilDriver extends Homey.Driver {
    */
   async onInit() {
     this.log('FancoilDriver has been initialized');
+
+    // Flows
+    const fancoilModeCondition = this.homey.flow.getConditionCard('fancoil-mode-is');
+    fancoilModeCondition.registerRunListener(async (args) => {
+      const { device, fancoil_mode } = await args;
+      const fancoilMode = device.getCapabilityValue('fancoil_mode');
+      return fancoilMode === fancoil_mode;
+    });
+    const fancoilModeAction = this.homey.flow.getActionCard('set-fancoil-mode');
+    fancoilModeAction.registerRunListener(async (args) => {
+      const { device, fancoil_mode } = await args;
+      device.setCapabilityValue('fancoil_mode', fancoil_mode).catch(this.error);
+      await device.onCapabilityFancoilMode(fancoil_mode);
+    });
+    const fanSpeedCondition = this.homey.flow.getConditionCard('fan-speed-is');
+    fanSpeedCondition.registerRunListener(async (args) => {
+      const { device, fan_speed } = await args;
+      const fanSpeed = device.getCapabilityValue('fan_speed_state');
+      return fanSpeed === fan_speed;
+    });
+    const fanSpeedAction = this.homey.flow.getActionCard('set-fan-speed-mode');
+    fanSpeedAction.registerRunListener(async (args) => {
+      const { device, fan_speed } = await args;
+      device.setCapabilityValue('fan_speed', fan_speed).catch(this.error);
+      await device.onCapabilityFanSpeed(fan_speed);
+    });
   }
 
   async onPair(session: PairSession) {
