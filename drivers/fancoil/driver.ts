@@ -25,7 +25,7 @@ class InnovaFancoilDevice extends Device {
 class InnovaFancoilDriver extends Driver {
 
   async onPair(session: any) {
-    session.setHandler('list_dæevices', async () => {
+    session.setHandler('list_devices', async () => {
       try {
         const devices: any[] = await this.discoverDevices();
         if (!devices || devices.length === 0) {
