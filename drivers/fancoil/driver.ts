@@ -38,7 +38,7 @@ class InnovaFancoilDriver extends Driver {
   async discoverDevices(): Promise<Device[]> {
     this.log('Start apparaatdetectie...');
     try {
-      const response: ApiResponse = await this.apiCall('/devices');
+      const response = await this.apiCall('/devices');
       this.log('Ontvangen respons van apparaten:', response);
 
       if (!response || !response.devices) {
@@ -59,20 +59,20 @@ class InnovaFancoilDriver extends Driver {
     }
   }
 
-  async apiCall(endpoint: string): Promise<ApiResponse | null> {
+  async apiCall(endpoint: string): Promise<ApiResponse> {
     try {
       this.log(`API-aanroep naar ${endpoint}`);
       const result = await fetch(`http://192.168.0.x${endpoint}`);
       if (!result.ok) {
         this.error(`API-fout: ${result.status} - ${result.statusText}`);
-        return null;
+        throw new Error('Ongeldige API-respons');
       }
       const data: ApiResponse = await result.json();
       this.log('Succesvolle API-respons:', data);
       return data;
     } catch (error) {
       this.error('API-aanroep mislukt:', error);
-      return null;
+      throw new Error('Fout tijdens API-aanroep');
     }
   }
 
