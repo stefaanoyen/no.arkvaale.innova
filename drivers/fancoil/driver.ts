@@ -82,6 +82,15 @@ class InnovaFancoilDriver extends Driver {
 
   async onSettings({ oldSettings, newSettings, changedKeys }: { oldSettings: Record<string, any>; newSettings: Record<string, any>; changedKeys: string[] }): Promise<void> {
     this.log('Instellingen gewijzigd:', changedKeys);
+    
+    if (changedKeys.length === 0) {
+      this.log('Geen instellingen gewijzigd, waarschijnlijk een fout in de Homey UI.');
+      return;
+    }
+    
+    this.log('Oude instellingen:', oldSettings);
+    this.log('Nieuwe instellingen:', newSettings);
+    
     if (changedKeys.includes('ip_address')) {
       this.log(`Nieuw IP-adres ingesteld: ${newSettings.ip_address}`);
     }
