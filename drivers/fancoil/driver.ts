@@ -27,7 +27,7 @@ class InnovaFancoilDriver extends Driver {
   async onPair(session: any) {
     session.setHandler('list_devices', async () => {
       try {
-        const devices = await this.discoverDevices();
+        const devices: any[] = await this.discoverDevices();
         if (!devices || devices.length === 0) {
           this.log('Geen apparaten gevonden. Controleer netwerkverbinding of compatibiliteit.');
           throw new Error('Geen apparaten gevonden.');
@@ -50,7 +50,7 @@ class InnovaFancoilDriver extends Driver {
   async discoverDevices() {
     this.log('Start apparaatdetectie...');
     try {
-      const response = await this.apiCall('/devices');
+      const response: ApiResponse | null = await this.apiCall('/devices');
       this.log('Ontvangen respons van apparaten:', response);
 
       if (!response || !response.devices) {
@@ -58,7 +58,7 @@ class InnovaFancoilDriver extends Driver {
         return [];
       }
 
-      return response.devices.filter(device => {
+      return response.devices?.filter((device: any) => {
         if (!device.mac || !device.id) {
           this.log('Apparaat uitgesloten vanwege ontbrekende MAC- of ID-gegevens:', device);
           return false;
