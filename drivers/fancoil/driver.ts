@@ -112,4 +112,4 @@ class InnovaFancoilDriver extends Driver {
   }
 }
 
-module.exports = { Driver: InnovaFancoilDriver, Device: InnovaFancoilDevice }
+module.exports = InnovaFancoilDriver
