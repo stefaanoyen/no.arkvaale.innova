@@ -1,153 +1,77 @@
-import Homey from 'homey';
-import PairSession from 'homey/lib/PairSession';
-import { Device, DeviceDataInput } from '../../interfaces/device.interface';
-import axios from 'axios';
-import { StatusResponse } from '../../interfaces/innova-api.interface';
+// Aangepaste functies voor foutafhandeling, MAC-adresbereik, en logging in de Innova Fancoil-app.
 
-class FancoilDriver extends Homey.Driver {
-  /**
-   * onInit is called when the driver is initialized.
-   */
-  async onInit() {
-    this.log('FancoilDriver has been initialized');
+const InnovaFancoilDriver = {
+  async onPair(session) {
+    session.setHandler('list_devices', async () => {
+      try {
+        const devices = await this.discoverDevices();
+        if (!devices || devices.length === 0) {
+          this.log('Geen apparaten gevonden. Controleer netwerkverbinding of compatibiliteit.');
+          throw new Error('Geen apparaten gevonden.');
+        }
 
-    // Flows
-    const fancoilModeCondition = this.homey.flow.getConditionCard('fancoil-mode-is');
-    fancoilModeCondition.registerRunListener(async (args) => {
-      const { device, fancoil_mode } = await args;
-      const fancoilMode = device.getCapabilityValue('fancoil_mode');
-      return fancoilMode === fancoil_mode;
-    });
-    const fancoilModeAction = this.homey.flow.getActionCard('set-fancoil-mode');
-    fancoilModeAction.registerRunListener(async (args) => {
-      const { device, fancoil_mode } = await args;
-      device.setCapabilityValue('fancoil_mode', fancoil_mode).catch(this.error);
-      await device.onCapabilityFancoilMode(fancoil_mode);
-    });
-    const fanSpeedCondition = this.homey.flow.getConditionCard('fan-speed-is');
-    fanSpeedCondition.registerRunListener(async (args) => {
-      const { device, fan_speed } = await args;
-      const fanSpeed = device.getCapabilityValue('fan_speed_state');
-      return fanSpeed === fan_speed;
-    });
-    const fanSpeedAction = this.homey.flow.getActionCard('set-fan-speed-mode');
-    fanSpeedAction.registerRunListener(async (args) => {
-      const { device, fan_speed } = await args;
-      device.setCapabilityValue('fan_speed', fan_speed).catch(this.error);
-      await device.onCapabilityFanSpeed(fan_speed);
-    });
-  }
-
-  async onPair(session: PairSession) {
-    const devices: Device[] = [];
-    const currentDevicesIds: string[] = this.getDevices().map((d) => d.getData().id);
-    const currentDevicesIps: string[] = this.getDevices().map((d) => d.getSetting('ip'));
-
-    const discoveryStrategy = this.getDiscoveryStrategy();
-    const discoveryResults = Object.values(discoveryStrategy.getDiscoveryResults()).filter(
-      (d) => !currentDevicesIds.includes(d.id),
-    );
-
-    if (discoveryResults.length > 0) {
-      discoveryResults.forEach((discoveryResult) => {
-        devices.push({
-          name: 'Innova Fancoil',
+        return devices.map(device => ({
+          name: device.name || 'Onbekend apparaat',
           data: {
-            id: discoveryResult.id,
+            id: device.id,
+            mac: device.mac,
           },
-          settings: {
-            ip: discoveryResult.address,
-          },
-        });
-      });
-
-      // ready to continue pairing
-      await session.emit('found', null);
-    }
-
-    // this is called when the user presses save settings button in start.html
-    session.setHandler('get_devices', async (data: DeviceDataInput) => {
-      this.log('Innova app - get_devices data: ' + JSON.stringify(data));
-      if (currentDevicesIps.includes(data.ip)) {
-        await session.emit('already_added', data.ip);
-      } else {
-        // if (PROCESS.env.DEBUG === '1') {
-        //   devices.push({
-        //     name: data.name,
-        //     data: {
-        //       id: (Math.random() + 1).toString(36).substring(7),
-        //     },
-        //     settings: {
-        //       ip: data.ip,
-        //     },
-        //   });
-        //
-        //   await session.emit('found', null);
-        //   return;
-        // }
-        const uri = `http://${data.ip}/api/v/1/status`;
-        await axios
-          .get(uri)
-          .then((res) => {
-            if (res) {
-              const statusResponse = res.data as StatusResponse;
-              if (!statusResponse.success) {
-                session.emit('api_error', 'Status success from Innova API was false');
-                this.log('Innova app - response is not ok');
-              } else {
-                this.log('Innova app - response is ok');
-                devices.push({
-                  name: data.name,
-                  data: { id: statusResponse.UID },
-                  settings: { ip: data.ip },
-                });
-
-                // ready to continue pairing
-                session.emit('found', null);
-              }
-            } else {
-              session.emit('api_error', 'Got no result from Innova API');
-              this.log('Fetch of current status failed!');
-            }
-          })
-          .catch((error) => {
-            session.emit('api_error', error.message);
-            this.log('Fetch of current status failed!', error.message);
-          });
+        }));
+      } catch (error) {
+        this.error('Fout bij apparaatdetectie:', error);
+        throw new Error('Apparaatdetectie is mislukt. Controleer de logs voor meer informatie.');
       }
     });
+  },
 
-    // this method is run when Homey.emit('list_devices') is run on the front-end
-    // which happens when you use the template `list_devices`
-    // pairing: start.html -> get_devices -> list_devices -> add_devices
-    session.setHandler('list_devices', async (data) => {
-      this.log('Innova app - list_devices data: ' + JSON.stringify(data));
-      this.log('Innova app - list_devices devices: ' + JSON.stringify(devices));
-      return devices;
-    });
+  async discoverDevices() {
+    this.log('Start apparaatdetectie...');
+    try {
+      const response = await this.apiCall('/devices'); // Hypothetische API-call
+      this.log('Ontvangen respons van apparaten:', response);
 
-    // if (PROCESS.env.DEBUG === '1' && !currentDevicesIps.includes('localhost:5000')) {
-    //   devices.push({
-    //     name: 'Innova Fancoil2',
-    //     data: {
-    //       id: (Math.random() + 1).toString(36).substring(7),
-    //     },
-    //     settings: {
-    //       ip: 'localhost:5000',
-    //     },
-    //   });
-    //   await session.emit('found', null);
-    //   return;
-    // }
-  }
+      if (!response || typeof response !== 'object') {
+        this.error('Ongeldige respons ontvangen:', response);
+        return [];
+      }
 
-  /**
-   * onPairListDevices is called when a user is adding a device and the 'list_devices' view is called.
-   * This should return an array with the data of devices that are available for pairing.
-   */
-  async onPairListDevices() {
-    return [];
-  }
-}
+      return response.devices.filter(device => {
+        if (!device.mac || !device.id) {
+          this.log('Apparaat uitgesloten vanwege ontbrekende MAC- of ID-gegevens:', device);
+          return false;
+        }
+        return true;
+      });
+    } catch (error) {
+      this.error('Fout tijdens apparaatdetectie:', error);
+      return [];
+    }
+  },
 
-module.exports = FancoilDriver;
+  async apiCall(endpoint) {
+    try {
+      this.log(`API-aanroep naar ${endpoint}`);
+      const result = await fetch(`http://192.168.0.x${endpoint}`); // Pas aan naar correct IP/netwerk
+      if (!result.ok) {
+        this.error(`API-fout: ${result.status} - ${result.statusText}`);
+        return null;
+      }
+      const data = await result.json();
+      this.log('Succesvolle API-respons:', data);
+      return data;
+    } catch (error) {
+      this.error('API-aanroep mislukt:', error);
+      return null;
+    }
+  },
+
+  log(message, ...args) {
+    console.log(`[Innova Fancoil] ${message}`, ...args);
+  },
+
+  error(message, ...args) {
+    console.error(`[Innova Fancoil] ${message}`, ...args);
+  },
+};
+
+module.exports = InnovaFancoilDriver;
