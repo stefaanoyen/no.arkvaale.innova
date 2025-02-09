@@ -74,7 +74,7 @@ class InnovaFancoilDriver extends Driver {
   async apiCall(endpoint: string) {
     try {
       this.log(`API-aanroep naar ${endpoint}`);
-      const device = this.getDevices()[0];
+      const ipAddress = this.getSetting('ip_address');
       const result = await fetch(`http://${device.getSetting('ip_address')}${endpoint}`);
       if (!result.ok) {
         this.error(`API-fout: ${result.status} - ${result.statusText}`);
