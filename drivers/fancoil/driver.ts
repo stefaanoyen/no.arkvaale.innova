@@ -1,27 +1,17 @@
 import { Driver } from 'homey';
 
-interface Device {
-  id: string;
-  mac: string;
-  name?: string;
-}
-
-interface ApiResponse {
-  devices: Device[];
-}
-
 class InnovaFancoilDriver extends Driver {
 
   async onPair(session: any) {
     session.setHandler('list_devices', async () => {
       try {
-        const devices: Device[] = await this.discoverDevices();
+        const devices = await this.discoverDevices();
         if (!devices || devices.length === 0) {
           this.log('Geen apparaten gevonden. Controleer netwerkverbinding of compatibiliteit.');
           throw new Error('Geen apparaten gevonden.');
         }
 
-        return devices.map((device: Device) => ({
+        return devices.map(device => ({
           name: device.name || 'Onbekend apparaat',
           data: {
             id: device.id,
@@ -35,7 +25,7 @@ class InnovaFancoilDriver extends Driver {
     });
   }
 
-  async discoverDevices(): Promise<Device[]> {
+  async discoverDevices() {
     this.log('Start apparaatdetectie...');
     try {
       const response = await this.apiCall('/devices');
@@ -46,7 +36,7 @@ class InnovaFancoilDriver extends Driver {
         return [];
       }
 
-      return response.devices.filter((device: Device) => {
+      return response.devices.filter(device => {
         if (!device.mac || !device.id) {
           this.log('Apparaat uitgesloten vanwege ontbrekende MAC- of ID-gegevens:', device);
           return false;
@@ -59,7 +49,7 @@ class InnovaFancoilDriver extends Driver {
     }
   }
 
-  async apiCall(endpoint: string): Promise<ApiResponse> {
+  async apiCall(endpoint) {
     try {
       this.log(`API-aanroep naar ${endpoint}`);
       const result = await fetch(`http://192.168.0.x${endpoint}`);
@@ -67,26 +57,26 @@ class InnovaFancoilDriver extends Driver {
         this.error(`API-fout: ${result.status} - ${result.statusText}`);
         throw new Error('Ongeldige API-respons');
       }
-      const data: unknown = await result.json();
+      const data = await result.json();
       if (typeof data !== 'object' || data === null || !('devices' in data)) {
         this.error('Onverwacht responsformaat ontvangen:', data);
         throw new Error('Onverwacht responsformaat');
       }
       this.log('Succesvolle API-respons:', data);
-      return data as ApiResponse;
+      return data;
     } catch (error) {
       this.error('API-aanroep mislukt:', error);
       throw new Error('Fout tijdens API-aanroep');
     }
   }
 
-  log(message: string, ...args: any[]): void {
+  log(message, ...args) {
     console.log(`[Innova Fancoil] ${message}`, ...args);
   }
 
-  error(message: string, ...args: any[]): void {
+  error(message, ...args) {
     console.error(`[Innova Fancoil] ${message}`, ...args);
   }
 }
 
-export default InnovaFancoilDriver;
+module.exports = InnovaFancoilDriver;
