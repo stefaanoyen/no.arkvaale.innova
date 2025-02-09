@@ -2,7 +2,7 @@ import { Device, Driver } from 'homey';
 
 class InnovaFancoilDriver extends Driver {
 
-  async onPair(session: HomeyAPI.Session) {
+  async onPair(session: any) { // Verwijderd HomeyAPI.Session
     session.setHandler('list_devices', async () => {
       try {
         const devices: any[] = await this.discoverDevices();
