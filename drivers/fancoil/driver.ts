@@ -1,4 +1,4 @@
-import { Device, Driver, HomeyAPI } from 'homey';
+import { Device, Driver } from 'homey';
 
 class InnovaFancoilDriver extends Driver {
 
