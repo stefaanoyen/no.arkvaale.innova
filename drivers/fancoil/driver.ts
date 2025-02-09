@@ -84,7 +84,13 @@ class InnovaFancoilDriver extends Driver {
         this.error('Onverwacht responsformaat ontvangen:', data);
         return null;
       }
-      const typedData: ApiResponse = data as ApiResponse;
+      const typedData: ApiResponse = {
+        devices: Array.isArray((data as any).devices) ? (data as any).devices.map((device: any) => ({
+          id: String(device.id),
+          mac: String(device.mac),
+          name: device.name ? String(device.name) : undefined,
+        })) : []
+      };
       if (typeof data !== 'object' || data === null || !('devices' in data)) {
         this.error('Onverwacht responsformaat ontvangen:', data);
         return null;
