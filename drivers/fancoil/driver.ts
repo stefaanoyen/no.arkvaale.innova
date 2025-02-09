@@ -89,4 +89,4 @@ class InnovaFancoilDriver extends Driver {
   }
 }
 
-export default InnovaFancoilDriver;
+module.exports = InnovaFancoilDriver;
