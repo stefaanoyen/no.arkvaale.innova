@@ -1,17 +1,17 @@
-import { Device, Driver } from 'homey';
+import { Driver } from 'homey';
 
 class InnovaFancoilDriver extends Driver {
 
-  async onPair(session: any) { // Verwijderd HomeyAPI.Session
+  async onPair(session: any) {
     session.setHandler('list_devices', async () => {
       try {
-        const devices: any[] = await this.discoverDevices();
+        const devices = await this.discoverDevices();
         if (!devices || devices.length === 0) {
           this.log('Geen apparaten gevonden. Controleer netwerkverbinding of compatibiliteit.');
           throw new Error('Geen apparaten gevonden.');
         }
 
-        return devices.map((device: any) => ({
+        return devices.map(device => ({
           name: device.name || 'Onbekend apparaat',
           data: {
             id: device.id,
@@ -25,10 +25,10 @@ class InnovaFancoilDriver extends Driver {
     });
   }
 
-  async discoverDevices(): Promise<any[]> {
+  async discoverDevices() {
     this.log('Start apparaatdetectie...');
     try {
-      const response: any = await this.apiCall('/devices'); // Hypothetische API-call
+      const response = await this.apiCall('/devices');
       this.log('Ontvangen respons van apparaten:', response);
 
       if (!response || typeof response !== 'object' || !response.devices) {
@@ -36,7 +36,7 @@ class InnovaFancoilDriver extends Driver {
         return [];
       }
 
-      return response.devices.filter((device: any) => {
+      return response.devices.filter(device => {
         if (!device.mac || !device.id) {
           this.log('Apparaat uitgesloten vanwege ontbrekende MAC- of ID-gegevens:', device);
           return false;
@@ -49,10 +49,10 @@ class InnovaFancoilDriver extends Driver {
     }
   }
 
-  async apiCall(endpoint: string): Promise<any> {
+  async apiCall(endpoint) {
     try {
       this.log(`API-aanroep naar ${endpoint}`);
-      const result = await fetch(`http://192.168.0.x${endpoint}`); // Pas aan naar correct IP/netwerk
+      const result = await fetch(`http://192.168.0.x${endpoint}`);
       if (!result.ok) {
         this.error(`API-fout: ${result.status} - ${result.statusText}`);
         return null;
@@ -66,11 +66,11 @@ class InnovaFancoilDriver extends Driver {
     }
   }
 
-  log(message: string, ...args: any[]): void {
+  log(message, ...args) {
     console.log(`[Innova Fancoil] ${message}`, ...args);
   }
 
-  error(message: string, ...args: any[]): void {
+  error(message, ...args) {
     console.error(`[Innova Fancoil] ${message}`, ...args);
   }
 }
