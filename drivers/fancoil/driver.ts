@@ -67,8 +67,8 @@ class InnovaFancoilDriver extends Driver {
         this.error(`API-fout: ${result.status} - ${result.statusText}`);
         throw new Error('Ongeldige API-respons');
       }
-      const data = await result.json();
-      if (typeof data !== 'object' || !data.devices) {
+      const data: unknown = await result.json();
+      if (typeof data !== 'object' || data === null || !('devices' in data)) {
         this.error('Onverwacht responsformaat ontvangen:', data);
         throw new Error('Onverwacht responsformaat');
       }
