@@ -1,5 +1,5 @@
 {
-  "id": "no.arkvaale.innova",
+  "id": "no.stefaanoyen.innova",
   "version": "1.5.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
@@ -8,7 +8,7 @@
     "local"
   ],
   "name": {
-    "en": "Innova Fancoil"
+    "en": "Stefaans Innova Fancoil"
   },
   "description": {
     "en": "Keep your home at the perfect temperature"
